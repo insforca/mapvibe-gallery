@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MapVibe — Gallery</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+
+    /* ─── Gradient void background ─── */
+    #bg {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 120% 30% at 50% 52%,
+          rgba(255,255,255,0.07) 0%,
+          rgba(255,255,255,0) 70%),
+        linear-gradient(to bottom,
+          #050507 0%,
+          #0c0d10 25%,
+          #141518 48%,
+          #0c0d10 75%,
+          #050507 100%);
+    }
+
+    #canvas-wrap {
+      position: fixed; inset: 0; z-index: 1;
+    }
+    canvas { display: block; }
+
+    /* ─── Loader ─── */
+    #loader {
+      position: fixed; inset: 0; z-index: 200;
+      background: #050507;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1.2rem;
+      transition: opacity 1s ease;
+    }
+    #loader.out { opacity: 0; pointer-events: none; }
+    #loader .logo-text {
+      font-family: 'Playfair Display', Georgia, serif;
+      color: #C9A96E;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+    }
+    #loader .sub {
+      font-family: 'Inter', sans-serif;
+      color: #333740;
+      font-size: 0.65rem;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+    }
+    #loader .ring-wrap {
+      position: relative; width: 56px; height: 56px;
+      margin-top: 0.5rem;
+    }
+    #loader svg.ring { transform: rotate(-90deg); }
+    #loader svg.ring circle {
+      fill: none; stroke: #C9A96E; stroke-width: 1.5;
+      stroke-dasharray: 157; stroke-dashoffset: 157;
+      transition: stroke-dashoffset 0.3s ease;
+      stroke-linecap: round;
+    }
+    #loader svg.ring circle.track { stroke: #1a1c22; stroke-dashoffset: 0; }
+    #loader .pct {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Inter', sans-serif;
+      color: #C9A96E; font-size: 0.65rem; letter-spacing: 0.1em;
+    }
+
+    /* ─── Brand ─── */
+    #brand {
+      position: fixed; top: 1.8rem; left: 2rem; z-index: 50;
+      font-family: 'Playfair Display', Georgia, serif;
+      color: #C9A96E; font-size: 1rem;
+      letter-spacing: 0.35em; text-transform: uppercase;
+      opacity: 0; transform: translateY(-8px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    #brand.show { opacity: 0.85; transform: translateY(0); }
+
+    /* ─── Controls hint ─── */
+    #controls-hint {
+      position: fixed; bottom: 1.8rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; align-items: center; gap: 1rem;
+      z-index: 50;
+      opacity: 0; transition: opacity 0.8s ease;
+    }
+    #controls-hint.show { opacity: 1; }
+    #controls-hint .key {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px;
+      border: 1px solid #2a2e38;
+      border-radius: 4px;
+      font-family: 'Inter', sans-serif;
+      color: #4a505e; font-size: 0.65rem;
+    }
+    #controls-hint .sep {
+      color: #2a2e38; font-size: 0.7rem;
+    }
+    #controls-hint .hint-text {
+      font-family: 'Inter', sans-serif;
+      color: #2a2e38; font-size: 0.65rem;
+      letter-spacing: 0.25em; text-transform: uppercase;
+    }
+
+    /* ─── Artwork info ─── */
+    #artwork-info {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 50;
+      text-align: right;
+      opacity: 0; transform: translateX(12px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    #artwork-info.show { opacity: 1; transform: translateX(0); }
+    #artwork-info .num {
+      font-family: 'Inter', sans-serif;
+      color: #C9A96E; font-size: 0.6rem;
+      letter-spacing: 0.45em; text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+    #artwork-info .title {
+      font-family: 'Playfair Display', Georgia, serif;
+      color: #F5EDE4; font-size: 0.9rem;
+      line-height: 1.4;
+    }
+    #artwork-info .city {
+      font-family: 'Inter', sans-serif;
+      color: #4a505e; font-size: 0.62rem;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    /* ─── Overview button ─── */
+    #btn-overview {
+      position: fixed; top: 1.8rem; right: 2rem; z-index: 50;
+      background: transparent;
+      border: 1px solid #2a2e38;
+      color: #4a505e;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.62rem; letter-spacing: 0.35em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.9rem;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: border-color 0.2s, color 0.2s;
+      opacity: 0; transition: opacity 0.8s ease;
+    }
+    #btn-overview.show { opacity: 1; }
+    #btn-overview:hover { border-color: #C9A96E66; color: #C9A96E88; }
+    #btn-overview.active { border-color: #C9A96E; color: #C9A96E; }
+
+    /* ─── Progress bar ─── */
+    #prog {
+      position: fixed; top: 0; left: 0; height: 1px;
+      background: linear-gradient(to right, transparent, #C9A96E, transparent);
+      width: 0%; z-index: 50;
+      transition: width 0.15s linear;
+    }
+
+    /* ─── Focus overlay ─── */
+    #focus-overlay {
+      position: fixed; inset: 0; z-index: 30;
+      background: rgba(5,5,7,0);
+      pointer-events: none;
+      transition: background 0.5s ease;
+    }
+    #focus-overlay.active { background: rgba(5,5,7,0.5); }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="bg"></div>
+  <div id="canvas-wrap"><canvas id="gl"></canvas></div>
+
+  <!-- Loader -->
+  <div id="loader">
+    <div class="logo-text">MapVibe</div>
+    <div class="sub">Gallery</div>
+    <div class="ring-wrap">
+      <svg class="ring" width="56" height="56" viewBox="0 0 56 56">
+        <circle class="track" cx="28" cy="28" r="25"/>
+        <circle id="ring-arc" cx="28" cy="28" r="25"/>
+      </svg>
+      <div class="pct" id="pct-text">0%</div>
+    </div>
+  </div>
+
+  <!-- UI -->
+  <div id="prog"></div>
+  <div id="brand">MapVibe</div>
+  <button id="btn-overview">Overview</button>
+  <div id="controls-hint">
+    <div class="key">←</div><div class="key">→</div>
+    <div class="sep">or</div>
+    <div class="hint-text">Scroll to navigate · Click artwork to focus</div>
+  </div>
+  <div id="artwork-info">
+    <div class="num" id="aw-num">01 / 10</div>
+    <div class="title" id="aw-title">—</div>
+    <div class="city" id="aw-city">—</div>
+  </div>
+  <div id="focus-overlay"></div>
+
+  <!-- Deps -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="gallery.js"></script>
+</body>
+</html>
