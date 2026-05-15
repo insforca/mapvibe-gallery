@@ -3,208 +3,523 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MapVibe — Gallery</title>
+  <title>MapVibe — City Map Art</title>
+  <meta name="description" content="Premium city map art prints for modern interiors and thoughtful gifting." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+    :root {
+      --ivory:      #F7F3ED;
+      --warm-white: #FAFAF8;
+      --sand:       #E8E0D4;
+      --walnut:     #7A6248;
+      --gold:       #C9A96E;
+      --matte:      #1A1814;
+      --mid:        #4A4640;
+      --void:       #050507;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--warm-white);
+      color: var(--matte);
+      overflow-x: hidden;
+    }
 
-    /* ─── Gradient void background ─── */
-    #bg {
-      position: fixed; inset: 0; z-index: 0;
+    /* ── NAV ─────────────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.6rem 2.5rem;
+      mix-blend-mode: normal;
+    }
+    nav::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(247,243,237,0.9) 0%, transparent 100%);
+      backdrop-filter: blur(0px);
+      pointer-events: none;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--matte);
+      text-decoration: none;
+      position: relative;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 2.5rem;
+      list-style: none; position: relative;
+    }
+    .nav-links a {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--mid);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--matte); }
+    .nav-cta {
+      font-size: 0.62rem !important;
+      letter-spacing: 0.25em;
+      padding: 0.55rem 1.2rem;
+      border: 1px solid var(--matte) !important;
+      color: var(--matte) !important;
+      transition: background 0.2s, color 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--matte) !important; color: var(--ivory) !important; }
+
+    /* ── HERO ─────────────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 10rem 2.5rem 6rem;
+      background: var(--warm-white);
+      position: relative;
+    }
+    #hero::after {
+      content: '';
+      position: absolute; bottom: 0; left: 2.5rem; right: 2.5rem; height: 1px;
+      background: var(--sand);
+    }
+    .hero-eyebrow {
+      font-size: 0.6rem;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--walnut);
+      margin-bottom: 2rem;
+    }
+    .hero-h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 300;
+      font-size: clamp(3.5rem, 8vw, 7.5rem);
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      color: var(--matte);
+      max-width: 14ch;
+      margin-bottom: 2.5rem;
+    }
+    .hero-h1 em { font-style: italic; color: var(--walnut); }
+    .hero-sub {
+      font-size: 0.85rem;
+      line-height: 1.7;
+      color: var(--mid);
+      max-width: 38ch;
+      font-weight: 300;
+      margin-bottom: 3.5rem;
+    }
+    .hero-actions {
+      display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      padding: 1rem 2rem;
+      background: var(--matte);
+      color: var(--ivory);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-primary:hover { background: var(--walnut); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--mid);
+      text-decoration: none;
+      border-bottom: 1px solid var(--sand);
+      padding-bottom: 0.1rem;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .btn-ghost:hover { color: var(--matte); border-color: var(--mid); }
+    .hero-scroll-cue {
+      position: absolute;
+      bottom: 2.5rem; right: 2.5rem;
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    }
+    .hero-scroll-cue span {
+      font-size: 0.55rem; letter-spacing: 0.4em;
+      text-transform: uppercase; color: var(--sand);
+      writing-mode: vertical-rl;
+    }
+    .hero-scroll-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--sand), transparent);
+      animation: scroll-pulse 2s ease-in-out infinite;
+    }
+    @keyframes scroll-pulse { 0%,100% { opacity: 0.3 } 50% { opacity: 1 } }
+
+    /* ── GALLERY SECTION ─────────────────────────────────────────────── */
+    #gallery {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      background: var(--void);
+      overflow: hidden;
+    }
+    /* gradient void bg */
+    #gallery-bg {
+      position: absolute; inset: 0; z-index: 0;
       background:
         radial-gradient(ellipse 120% 30% at 50% 52%,
-          rgba(255,255,255,0.07) 0%,
+          rgba(255,255,255,0.06) 0%,
           rgba(255,255,255,0) 70%),
         linear-gradient(to bottom,
-          #050507 0%,
-          #0c0d10 25%,
-          #141518 48%,
-          #0c0d10 75%,
-          #050507 100%);
+          #050507 0%, #0c0d10 25%, #141518 48%, #0c0d10 75%, #050507 100%);
     }
-
-    #canvas-wrap {
-      position: fixed; inset: 0; z-index: 1;
+    #gallery-canvas-wrap {
+      position: absolute; inset: 0; z-index: 1;
     }
-    canvas { display: block; }
+    #gallery-canvas-wrap canvas { display: block; width: 100%; height: 100%; }
 
-    /* ─── Loader ─── */
-    #loader {
-      position: fixed; inset: 0; z-index: 200;
+    /* Loader inside gallery */
+    #gl-loader {
+      position: absolute; inset: 0; z-index: 20;
       background: #050507;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       gap: 1.2rem;
-      transition: opacity 1s ease;
+      transition: opacity 0.8s ease;
     }
-    #loader.out { opacity: 0; pointer-events: none; }
-    #loader .logo-text {
-      font-family: 'Playfair Display', Georgia, serif;
-      color: #C9A96E;
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
+    #gl-loader.out { opacity: 0; pointer-events: none; }
+    #gl-loader .logo-text {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold); font-size: clamp(1.6rem, 4vw, 2.8rem);
+      letter-spacing: 0.3em; text-transform: uppercase;
     }
-    #loader .sub {
-      font-family: 'Inter', sans-serif;
-      color: #333740;
-      font-size: 0.65rem;
-      letter-spacing: 0.5em;
-      text-transform: uppercase;
+    #gl-loader .sub {
+      color: #333740; font-size: 0.62rem;
+      letter-spacing: 0.5em; text-transform: uppercase;
     }
-    #loader .ring-wrap {
-      position: relative; width: 56px; height: 56px;
-      margin-top: 0.5rem;
-    }
-    #loader svg.ring { transform: rotate(-90deg); }
-    #loader svg.ring circle {
-      fill: none; stroke: #C9A96E; stroke-width: 1.5;
-      stroke-dasharray: 157; stroke-dashoffset: 157;
+    .ring-wrap { position: relative; width: 48px; height: 48px; margin-top: 0.5rem; }
+    svg.ring { transform: rotate(-90deg); }
+    svg.ring circle {
+      fill: none; stroke: var(--gold); stroke-width: 1.5;
+      stroke-dasharray: 138; stroke-dashoffset: 138;
       transition: stroke-dashoffset 0.3s ease;
       stroke-linecap: round;
     }
-    #loader svg.ring circle.track { stroke: #1a1c22; stroke-dashoffset: 0; }
-    #loader .pct {
+    svg.ring circle.track { stroke: #1a1c22; stroke-dashoffset: 0; }
+    .pct {
       position: absolute; inset: 0;
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Inter', sans-serif;
-      color: #C9A96E; font-size: 0.65rem; letter-spacing: 0.1em;
+      color: var(--gold); font-size: 0.6rem; letter-spacing: 0.1em;
     }
 
-    /* ─── Brand ─── */
-    #brand {
-      position: fixed; top: 1.8rem; left: 2rem; z-index: 50;
-      font-family: 'Playfair Display', Georgia, serif;
-      color: #C9A96E; font-size: 1rem;
-      letter-spacing: 0.35em; text-transform: uppercase;
-      opacity: 0; transform: translateY(-8px);
+    /* Gallery UI overlay */
+    #gl-prog {
+      position: absolute; top: 0; left: 0; height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      width: 0%; z-index: 10;
+      transition: width 0.15s linear;
+    }
+    #gl-section-label {
+      position: absolute; top: 2rem; left: 2.5rem; z-index: 10;
+      opacity: 0; transform: translateY(-6px);
       transition: opacity 0.8s ease, transform 0.8s ease;
     }
-    #brand.show { opacity: 0.85; transform: translateY(0); }
+    #gl-section-label.show { opacity: 1; transform: translateY(0); }
+    #gl-section-label .eyebrow {
+      font-size: 0.58rem; letter-spacing: 0.5em;
+      text-transform: uppercase; color: #333740;
+    }
+    #gl-section-label .label-title {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold); font-size: 0.9rem; margin-top: 0.15rem;
+    }
+    #gl-btn-overview {
+      position: absolute; top: 2rem; right: 2.5rem; z-index: 10;
+      background: transparent;
+      border: 1px solid #2a2e38;
+      color: #4a505e; cursor: pointer;
+      font-size: 0.58rem; letter-spacing: 0.35em;
+      text-transform: uppercase;
+      padding: 0.45rem 0.8rem;
+      border-radius: 2px;
+      opacity: 0; transition: opacity 0.8s ease, border-color 0.2s, color 0.2s;
+    }
+    #gl-btn-overview.show { opacity: 1; }
+    #gl-btn-overview:hover { border-color: rgba(201,169,110,0.4); color: rgba(201,169,110,0.6); }
+    #gl-btn-overview.active { border-color: var(--gold); color: var(--gold); }
 
-    /* ─── Controls hint ─── */
-    #controls-hint {
-      position: fixed; bottom: 1.8rem; left: 50%;
+    #gl-controls-hint {
+      position: absolute; bottom: 2rem; left: 50%;
       transform: translateX(-50%);
       display: flex; align-items: center; gap: 1rem;
-      z-index: 50;
+      z-index: 10;
       opacity: 0; transition: opacity 0.8s ease;
     }
-    #controls-hint.show { opacity: 1; }
-    #controls-hint .key {
+    #gl-controls-hint.show { opacity: 1; }
+    .key {
       display: inline-flex; align-items: center; justify-content: center;
-      width: 24px; height: 24px;
-      border: 1px solid #2a2e38;
-      border-radius: 4px;
-      font-family: 'Inter', sans-serif;
-      color: #4a505e; font-size: 0.65rem;
+      width: 22px; height: 22px;
+      border: 1px solid #2a2e38; border-radius: 3px;
+      color: #4a505e; font-size: 0.6rem;
     }
-    #controls-hint .sep {
-      color: #2a2e38; font-size: 0.7rem;
-    }
-    #controls-hint .hint-text {
-      font-family: 'Inter', sans-serif;
-      color: #2a2e38; font-size: 0.65rem;
-      letter-spacing: 0.25em; text-transform: uppercase;
+    .sep { color: #2a2e38; font-size: 0.65rem; }
+    .hint-text {
+      color: #2a2e38; font-size: 0.6rem;
+      letter-spacing: 0.22em; text-transform: uppercase;
     }
 
-    /* ─── Artwork info ─── */
-    #artwork-info {
-      position: fixed; bottom: 2rem; right: 2rem; z-index: 50;
+    #gl-artwork-info {
+      position: absolute; bottom: 2rem; right: 2.5rem; z-index: 10;
       text-align: right;
-      opacity: 0; transform: translateX(12px);
-      transition: opacity 0.45s ease, transform 0.45s ease;
+      opacity: 0; transform: translateX(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
     }
-    #artwork-info.show { opacity: 1; transform: translateX(0); }
-    #artwork-info .num {
-      font-family: 'Inter', sans-serif;
-      color: #C9A96E; font-size: 0.6rem;
+    #gl-artwork-info.show { opacity: 1; transform: translateX(0); }
+    #gl-artwork-info .num {
+      color: var(--gold); font-size: 0.58rem;
       letter-spacing: 0.45em; text-transform: uppercase;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.2rem;
     }
-    #artwork-info .title {
-      font-family: 'Playfair Display', Georgia, serif;
-      color: #F5EDE4; font-size: 0.9rem;
-      line-height: 1.4;
+    #gl-artwork-info .title {
+      font-family: 'Playfair Display', serif;
+      color: #F5EDE4; font-size: 0.88rem; line-height: 1.4;
     }
-    #artwork-info .city {
-      font-family: 'Inter', sans-serif;
-      color: #4a505e; font-size: 0.62rem;
+    #gl-artwork-info .city {
+      color: #4a505e; font-size: 0.6rem;
       letter-spacing: 0.3em; text-transform: uppercase;
       margin-top: 0.2rem;
     }
-
-    /* ─── Overview button ─── */
-    #btn-overview {
-      position: fixed; top: 1.8rem; right: 2rem; z-index: 50;
-      background: transparent;
-      border: 1px solid #2a2e38;
-      color: #4a505e;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.62rem; letter-spacing: 0.35em;
-      text-transform: uppercase;
-      padding: 0.5rem 0.9rem;
-      cursor: pointer;
-      border-radius: 2px;
-      transition: border-color 0.2s, color 0.2s;
-      opacity: 0; transition: opacity 0.8s ease;
-    }
-    #btn-overview.show { opacity: 1; }
-    #btn-overview:hover { border-color: #C9A96E66; color: #C9A96E88; }
-    #btn-overview.active { border-color: #C9A96E; color: #C9A96E; }
-
-    /* ─── Progress bar ─── */
-    #prog {
-      position: fixed; top: 0; left: 0; height: 1px;
-      background: linear-gradient(to right, transparent, #C9A96E, transparent);
-      width: 0%; z-index: 50;
-      transition: width 0.15s linear;
-    }
-
-    /* ─── Focus overlay ─── */
-    #focus-overlay {
-      position: fixed; inset: 0; z-index: 30;
+    #gl-focus-overlay {
+      position: absolute; inset: 0; z-index: 5;
       background: rgba(5,5,7,0);
       pointer-events: none;
       transition: background 0.5s ease;
     }
-    #focus-overlay.active { background: rgba(5,5,7,0.5); }
+    #gl-focus-overlay.active { background: rgba(5,5,7,0.5); }
+
+    /* gallery border */
+    #gallery::before {
+      content: ''; position: absolute;
+      top: 0; left: 2.5rem; right: 2.5rem; height: 1px;
+      background: var(--sand); z-index: 15;
+    }
+    #gallery::after {
+      content: ''; position: absolute;
+      bottom: 0; left: 2.5rem; right: 2.5rem; height: 1px;
+      background: var(--sand); z-index: 15;
+    }
+
+    /* ── COLLECTION STRIP ─────────────────────────────────────────────── */
+    #collection {
+      padding: 7rem 2.5rem;
+      background: var(--warm-white);
+    }
+    .collection-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      max-width: 900px;
+    }
+    .coll-eyebrow {
+      font-size: 0.58rem; letter-spacing: 0.5em;
+      text-transform: uppercase; color: var(--walnut);
+      margin-bottom: 1.2rem;
+    }
+    .coll-h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 300;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.1; color: var(--matte);
+    }
+    .coll-h2 em { font-style: italic; }
+    .coll-body {
+      font-size: 0.82rem; line-height: 1.8;
+      color: var(--mid); font-weight: 300;
+      margin-top: 1.5rem;
+    }
+    .coll-list {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 1.4rem;
+      margin-top: 1rem;
+    }
+    .coll-list li {
+      display: flex; align-items: flex-start; gap: 1rem;
+      font-size: 0.8rem; color: var(--mid); font-weight: 300; line-height: 1.6;
+    }
+    .coll-list .bullet {
+      flex-shrink: 0;
+      width: 20px; height: 1px;
+      background: var(--walnut);
+      margin-top: 0.55rem;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────────────────── */
+    footer {
+      padding: 3rem 2.5rem;
+      border-top: 1px solid var(--sand);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1.5rem;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.9rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--matte);
+      text-decoration: none;
+    }
+    .footer-copy {
+      font-size: 0.6rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--sand);
+    }
+    .footer-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+    .footer-links a {
+      font-size: 0.6rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--mid);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--matte); }
+
+    /* ── RESPONSIVE ──────────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .collection-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .nav-links { display: none; }
+      #hero { padding-top: 8rem; }
+    }
   </style>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div id="bg"></div>
-  <div id="canvas-wrap"><canvas id="gl"></canvas></div>
 
-  <!-- Loader -->
-  <div id="loader">
-    <div class="logo-text">MapVibe</div>
-    <div class="sub">Gallery</div>
-    <div class="ring-wrap">
-      <svg class="ring" width="56" height="56" viewBox="0 0 56 56">
-        <circle class="track" cx="28" cy="28" r="25"/>
-        <circle id="ring-arc" cx="28" cy="28" r="25"/>
-      </svg>
-      <div class="pct" id="pct-text">0%</div>
+  <!-- Navigation -->
+  <nav>
+    <a href="#" class="nav-logo">MapVibe</a>
+    <ul class="nav-links">
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#collection">Collection</a></li>
+      <li><a href="#" class="nav-cta">Create yours</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section id="hero">
+    <p class="hero-eyebrow">Premium City Map Art</p>
+    <h1 class="hero-h1">
+      Your city,<br>
+      <em>on your wall.</em>
+    </h1>
+    <p class="hero-sub">
+      Cartographic prints generated from real geographic data —
+      styled for quiet, editorial spaces.
+    </p>
+    <div class="hero-actions">
+      <a href="#gallery" class="btn-primary">Explore the gallery &nbsp;→</a>
+      <a href="#collection" class="btn-ghost">View collection</a>
     </div>
-  </div>
+    <div class="hero-scroll-cue">
+      <div class="hero-scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
 
-  <!-- UI -->
-  <div id="prog"></div>
-  <div id="brand">MapVibe</div>
-  <button id="btn-overview">Overview</button>
-  <div id="controls-hint">
-    <div class="key">←</div><div class="key">→</div>
-    <div class="sep">or</div>
-    <div class="hint-text">Scroll to navigate · Click artwork to focus</div>
-  </div>
-  <div id="artwork-info">
-    <div class="num" id="aw-num">01 / 10</div>
-    <div class="title" id="aw-title">—</div>
-    <div class="city" id="aw-city">—</div>
-  </div>
-  <div id="focus-overlay"></div>
+  <!-- 3D Gallery -->
+  <section id="gallery">
+    <div id="gallery-bg"></div>
+    <div id="gallery-canvas-wrap">
+      <canvas id="gl"></canvas>
+    </div>
+
+    <!-- Loader -->
+    <div id="gl-loader">
+      <div class="logo-text">MapVibe</div>
+      <div class="sub">Gallery</div>
+      <div class="ring-wrap">
+        <svg class="ring" width="48" height="48" viewBox="0 0 48 48">
+          <circle class="track" cx="24" cy="24" r="22"/>
+          <circle id="ring-arc" cx="24" cy="24" r="22"/>
+        </svg>
+        <div class="pct" id="pct-text">0%</div>
+      </div>
+    </div>
+
+    <!-- Gallery UI -->
+    <div id="gl-prog"></div>
+
+    <div id="gl-section-label">
+      <div class="eyebrow">The Collection</div>
+      <div class="label-title">Cities, Curated</div>
+    </div>
+
+    <button id="gl-btn-overview">Overview</button>
+
+    <div id="gl-controls-hint">
+      <div class="key">←</div>
+      <div class="key">→</div>
+      <div class="sep">or</div>
+      <div class="hint-text">Scroll inside · click to focus</div>
+    </div>
+
+    <div id="gl-artwork-info">
+      <div class="num" id="aw-num">01 / 10</div>
+      <div class="title" id="aw-title">—</div>
+      <div class="city" id="aw-city">—</div>
+    </div>
+
+    <div id="gl-focus-overlay"></div>
+  </section>
+
+  <!-- Collection info -->
+  <section id="collection">
+    <div class="collection-grid">
+      <div>
+        <p class="coll-eyebrow">Our Process</p>
+        <h2 class="coll-h2">
+          Real maps,<br>
+          <em>refined.</em>
+        </h2>
+        <p class="coll-body">
+          Every MapVibe print begins with raw OpenStreetMap cartographic
+          data for your city. We strip it down to its essential geometry —
+          streets, districts, coastlines — then apply precision-tuned
+          palettes for quiet, interior-quality results.
+        </p>
+      </div>
+      <div>
+        <p class="coll-eyebrow">Why MapVibe</p>
+        <ul class="coll-list">
+          <li>
+            <div class="bullet"></div>
+            <span>Generated from real geographic data — your city, not a stock illustration</span>
+          </li>
+          <li>
+            <div class="bullet"></div>
+            <span>Print-resolution files (300 dpi) ready for any size up to 90×120 cm</span>
+          </li>
+          <li>
+            <div class="bullet"></div>
+            <span>Palettes designed for Scandinavian, Japandi, and editorial interior styles</span>
+          </li>
+          <li>
+            <div class="bullet"></div>
+            <span>Instant digital delivery — frame it anywhere in the world</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <a href="#" class="footer-logo">MapVibe</a>
+    <p class="footer-copy">© 2026 MapVibe. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">Pinterest</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </footer>
 
   <!-- Deps -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
